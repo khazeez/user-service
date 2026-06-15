@@ -15,6 +15,12 @@ service UserService {
   rpc ListUsers(Empty)
       returns (UserListResponse);
 
+  rpc UpdateUser(UpdateUserRequest)
+      returns (UserResponse);
+
+  rpc PatchUser(PatchUserRequest)
+      returns (UserResponse);
+
   rpc DeleteUser(DeleteUserRequest)
       returns (Empty);
 }
@@ -35,6 +41,18 @@ message DeleteUserRequest {
 }
 
 message UserResponse {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message PatchUserRequest {
   int64 id = 1;
   string name = 2;
   string email = 3;

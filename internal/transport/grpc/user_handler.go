@@ -9,20 +9,19 @@ import (
 )
 
 type UserHandler struct {
-    pb.UnimplementedUserServiceServer
+	pb.UnimplementedUserServiceServer
 
-    service *service.UserService
+	service *service.UserService
 }
 
 func NewUserHandler(
-    service *service.UserService,
+	service *service.UserService,
 ) *UserHandler {
 
-    return &UserHandler{
-        service: service,
-    }
+	return &UserHandler{
+		service: service,
+	}
 }
-
 
 func (h *UserHandler) CreateUser(
 	ctx context.Context,
@@ -39,8 +38,8 @@ func (h *UserHandler) CreateUser(
 	}
 
 	return &pb.UserResponse{
-		Id: user.ID,
-		Name: user.Name,
+		Id:    user.ID,
+		Name:  user.Name,
 		Email: user.Email,
 	}, nil
 }
@@ -56,8 +55,8 @@ func (h *UserHandler) GetUser(
 	}
 
 	return &pb.UserResponse{
-		Id: user.ID,
-		Name: user.Name,
+		Id:    user.ID,
+		Name:  user.Name,
 		Email: user.Email,
 	}, nil
 }
@@ -75,12 +74,56 @@ func (h *UserHandler) ListUsers(
 	resp := &pb.UserListResponse{}
 	for _, u := range users {
 		resp.Users = append(resp.Users, &pb.UserResponse{
-			Id: u.ID,
-			Name: u.Name,
+			Id:    u.ID,
+			Name:  u.Name,
 			Email: u.Email,
 		})
 	}
 	return resp, nil
+}
+
+func (h *UserHandler) UpdateUser(
+	ctx context.Context,
+	req *pb.UpdateUserRequest,
+) (*pb.UserResponse, error) {
+
+	user, err := h.service.UpdateUser(
+		req.Id,
+		req.Name,
+		req.Email,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UserResponse{
+		Id:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+	}, nil
+}
+
+func (h *UserHandler) PatchUser(
+	ctx context.Context,
+	req *pb.PatchUserRequest,
+) (*pb.UserResponse, error) {
+
+	user, err := h.service.PatchUser(
+		req.Id,
+		req.Name,
+		req.Email,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UserResponse{
+		Id:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+	}, nil
 }
 
 func (h *UserHandler) DeleteUser(
